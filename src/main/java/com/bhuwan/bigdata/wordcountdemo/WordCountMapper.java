@@ -4,6 +4,7 @@
 package com.bhuwan.bigdata.wordcountdemo;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -17,12 +18,14 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     @Override
-    protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, IntWritable>.Context context)
+    protected void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
-
-        String[] values = value.toString().split("|");
-        for (String val : values) {
-            context.write(new Text(val), new IntWritable(1));
+        Text word = new Text();
+        String line = value.toString();
+        StringTokenizer tokenizer = new StringTokenizer(line, "|");
+        while (tokenizer.hasMoreTokens()) {
+          word.set(tokenizer.nextToken());
+          context.write(word, new IntWritable(1));
         }
     }
 }
