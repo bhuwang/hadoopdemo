@@ -22,9 +22,9 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
             throws IOException, InterruptedException {
         Text word = new Text();
         String line = value.toString();
-        StringTokenizer tokenizer = new StringTokenizer(line, "|");
+        StringTokenizer tokenizer = new StringTokenizer(line," .,:;?)_!");
         while (tokenizer.hasMoreTokens()) {
-          word.set(tokenizer.nextToken());
+          word.set(tokenizer.nextToken().trim());
           context.write(word, new IntWritable(1));
         }
     }
